@@ -18,9 +18,11 @@ public class Respuesta {
 
     /**
      * This is a sample web service operation
+     * @return 
      */
-    @WebMethod(operationName = "Calc")
-    public int calc(@WebParam(name = "Num1") int Num1, @WebParam(name = "Num2") int Num2) {
-        return Num1+Num2;
+    @WebMethod(operationName = "MensajeInicial")
+    public String MensajeInicial(int num) {
+        if(num==1)return "Mensaje automatico de prueba 1";
+        else return "Mensaje automatico de prueba 2";
     }
 }

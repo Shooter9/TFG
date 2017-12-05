@@ -4,21 +4,21 @@
 <xsd:import namespace="http://InitialService/" schemaLocation="http://localhost:50852/MessageServiceInitial/Respuesta?xsd=1"/>
 </xsd:schema>
 </types>
-<message name="Calc">
-<part name="parameters" element="tns:Calc"/>
+<message name="MensajeInicial">
+<part name="parameters" element="tns:MensajeInicial"/>
 </message>
-<message name="CalcResponse">
-<part name="parameters" element="tns:CalcResponse"/>
+<message name="MensajeInicialResponse">
+<part name="parameters" element="tns:MensajeInicialResponse"/>
 </message>
 <portType name="Respuesta">
-<operation name="Calc">
-<input wsam:Action="http://InitialService/Respuesta/CalcRequest" message="tns:Calc"/>
-<output wsam:Action="http://InitialService/Respuesta/CalcResponse" message="tns:CalcResponse"/>
+<operation name="MensajeInicial">
+<input wsam:Action="http://InitialService/Respuesta/MensajeInicialRequest" message="tns:MensajeInicial"/>
+<output wsam:Action="http://InitialService/Respuesta/MensajeInicialResponse" message="tns:MensajeInicialResponse"/>
 </operation>
 </portType>
 <binding name="RespuestaPortBinding" type="tns:Respuesta">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-<operation name="Calc">
+<operation name="MensajeInicial">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>

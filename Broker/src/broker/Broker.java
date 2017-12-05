@@ -1,75 +1,81 @@
-/*
- * Copyright 2007 Yusuke Yamamoto
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package broker;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URL;
+import java.util.logging.Level;
+import javax.imageio.ImageIO;
 import twitter4j.*;
+import twitter4j.auth.AccessToken;
 import twitter4j.conf.ConfigurationBuilder;
 
 /**
- * <p>
- * This is a code example of Twitter4J Streaming API - user stream.<br>
- * Usage: java twitter4j.examples.PrintUserStream. Needs a valid twitter4j.properties file with Basic Auth _and_ OAuth properties set<br>
- * </p>
- *
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @author Rémy Rakic - remy dot rakic at gmail.com
+ * @author Mario Arias Escalona
  */
 public final class Broker {
+
+    public static final String CONSUMER_KEY = "aP0JA7NbPuyix3dNCTRXpghWI";
+    public static final String CONSUMER_SECRET = "tl2PJHzTPEXYFaWiqpwmlz8ermftiKeQZ7kmv9KLCmS648OHPf";
+    public static final String ACCES_TOKEN = "928186006049886208-MWbI2nSWu7TlhHkciSSL87NOIAu1lZr";
+    public static final String ACCES_TOKEN_SECRET = "3ftbEBbDdgGnI9XM4mqJ2iynxOiIhdypq8EgR7CyyCsoT";
+
     public static void main(String[] args) throws TwitterException {
-                //Configuramos las claves y tokens de nuestra aplicacion de twitter
+        
+        //Configuramos las claves y tokens de nuestra aplicacion de twitter
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
-            .setOAuthConsumerKey("aP0JA7NbPuyix3dNCTRXpghWI")
-            .setOAuthConsumerSecret("tl2PJHzTPEXYFaWiqpwmlz8ermftiKeQZ7kmv9KLCmS648OHPf")
-            .setOAuthAccessToken("928186006049886208-MWbI2nSWu7TlhHkciSSL87NOIAu1lZr")
-            .setOAuthAccessTokenSecret("3ftbEBbDdgGnI9XM4mqJ2iynxOiIhdypq8EgR7CyyCsoT");
-        
+                .setOAuthConsumerKey(CONSUMER_KEY)
+                .setOAuthConsumerSecret(CONSUMER_SECRET)
+                .setOAuthAccessToken(ACCES_TOKEN)
+                .setOAuthAccessTokenSecret(ACCES_TOKEN_SECRET);
+
         //Creamos una instancia para ver nuestra cuenta en streaming (tiempo real)
         TwitterStream twitterStream = new TwitterStreamFactory(cb.build())
-            .getInstance();
+                .getInstance(); 
+
         twitterStream.addListener(listener);
-        // user() method internally creates a thread which manipulates TwitterStream and calls these adequate listener methods continuously.
+        // El metodo user() internamente crea threads que manipulan las llamadas a la API de twitter y hace continuamete llamadas, dependiendo de la actividad de la cuenta.
         twitterStream.user();
+
     }
 
     private static final UserStreamListener listener = new UserStreamListener() {
         @Override
         public void onStatus(Status status) {
+           if (("cvcBoT17").equals(status.getInReplyToScreenName())) {
+            PostingResponse response =new PostingResponse();
+            try {
+                response.postingResponse(status.getInReplyToUserId(), status.getUser().getScreenName());
+            } catch (TwitterException ex) {
+                java.util.logging.Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+
+
             System.out.println("onStatus @" + status.getUser().getScreenName() + " - " + status.getText());
-            /*
-                                try{
-                        if(status.getHashtagEntities()[0].getText().equals("readThis")){
+            
+                try {
+
+                    if (status.getHashtagEntities()[0].getText().equals("readThis")) {
                         //Guardamos la imagen enviada a traves de twitter
                         URL url = new URL((status.getMediaEntities())[0].getMediaURL());
                         BufferedImage img = ImageIO.read(url);
-                        File file = new File("C:\\Users\\User\\Desktop\\TFG\\Imagenes\\"+((status.getMediaEntities())[0].getExpandedURL()).split("/")+".jpg");
+                        File file = new File("C:\\Users\\mario.arias\\Desktop\\Proyectos\\TFG\\Imagenes\\" + ((status.getMediaEntities())[0].getExpandedURL()).split("/") + ".jpg");
                         ImageIO.write(img, "jpg", file);
                         //Si todo ha salido correctamente mostramos el tweet
                         System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
-                        }
-                        else System.out.println("El hastag no se corresponde con ningun servicio");
 
-                    }catch(Exception e){
-                        //En caso de que el tweet venga vacio, mostraremos este mensaje
-                        System.out.println("El tweet no contiene imagenes o viene sin hastag");
-
+                    } else {
+                        System.out.println("El hastag no se corresponde con ningun servicio");
                     }
-            
-            */
+
+                } catch (Exception e) {
+                    //En caso de que el tweet venga vacio, mostraremos este mensaje
+                    System.out.println("El tweet no contiene imagenes o viene sin hastag");
+
+                }
+            }
+
         }
 
         @Override
@@ -105,92 +111,92 @@ public final class Broker {
         @Override
         public void onFavorite(User source, User target, Status favoritedStatus) {
             System.out.println("onFavorite source:@"
-                + source.getScreenName() + " target:@"
-                + target.getScreenName() + " @"
-                + favoritedStatus.getUser().getScreenName() + " - "
-                + favoritedStatus.getText());
+                    + source.getScreenName() + " target:@"
+                    + target.getScreenName() + " @"
+                    + favoritedStatus.getUser().getScreenName() + " - "
+                    + favoritedStatus.getText());
         }
 
         @Override
         public void onUnfavorite(User source, User target, Status unfavoritedStatus) {
             System.out.println("onUnFavorite source:@"
-                + source.getScreenName() + " target:@"
-                + target.getScreenName() + " @"
-                + unfavoritedStatus.getUser().getScreenName()
-                + " - " + unfavoritedStatus.getText());
+                    + source.getScreenName() + " target:@"
+                    + target.getScreenName() + " @"
+                    + unfavoritedStatus.getUser().getScreenName()
+                    + " - " + unfavoritedStatus.getText());
         }
 
         @Override
         public void onFollow(User source, User followedUser) {
             System.out.println("onFollow source:@"
-                + source.getScreenName() + " target:@"
-                + followedUser.getScreenName());
+                    + source.getScreenName() + " target:@"
+                    + followedUser.getScreenName());
         }
 
         @Override
         public void onUnfollow(User source, User followedUser) {
             System.out.println("onFollow source:@"
-                + source.getScreenName() + " target:@"
-                + followedUser.getScreenName());
+                    + source.getScreenName() + " target:@"
+                    + followedUser.getScreenName());
         }
 
         @Override
         public void onDirectMessage(DirectMessage directMessage) {
             System.out.println("onDirectMessage text:"
-                + directMessage.getText());
+                    + directMessage.getText());
         }
 
         @Override
         public void onUserListMemberAddition(User addedMember, User listOwner, UserList list) {
             System.out.println("onUserListMemberAddition added member:@"
-                + addedMember.getScreenName()
-                + " listOwner:@" + listOwner.getScreenName()
-                + " list:" + list.getName());
+                    + addedMember.getScreenName()
+                    + " listOwner:@" + listOwner.getScreenName()
+                    + " list:" + list.getName());
         }
 
         @Override
         public void onUserListMemberDeletion(User deletedMember, User listOwner, UserList list) {
             System.out.println("onUserListMemberDeleted deleted member:@"
-                + deletedMember.getScreenName()
-                + " listOwner:@" + listOwner.getScreenName()
-                + " list:" + list.getName());
+                    + deletedMember.getScreenName()
+                    + " listOwner:@" + listOwner.getScreenName()
+                    + " list:" + list.getName());
         }
 
         @Override
         public void onUserListSubscription(User subscriber, User listOwner, UserList list) {
             System.out.println("onUserListSubscribed subscriber:@"
-                + subscriber.getScreenName()
-                + " listOwner:@" + listOwner.getScreenName()
-                + " list:" + list.getName());
+                    + subscriber.getScreenName()
+                    + " listOwner:@" + listOwner.getScreenName()
+                    + " list:" + list.getName());
         }
 
         @Override
         public void onUserListUnsubscription(User subscriber, User listOwner, UserList list) {
             System.out.println("onUserListUnsubscribed subscriber:@"
-                + subscriber.getScreenName()
-                + " listOwner:@" + listOwner.getScreenName()
-                + " list:" + list.getName());
+                    + subscriber.getScreenName()
+                    + " listOwner:@" + listOwner.getScreenName()
+                    + " list:" + list.getName());
         }
 
         @Override
         public void onUserListCreation(User listOwner, UserList list) {
             System.out.println("onUserListCreated  listOwner:@"
-                + listOwner.getScreenName()
-                + " list:" + list.getName());
+                    + listOwner.getScreenName()
+                    + " list:" + list.getName());
         }
 
         @Override
         public void onUserListUpdate(User listOwner, UserList list) {
             System.out.println("onUserListUpdated  listOwner:@"
-                + listOwner.getScreenName()
-                + " list:" + list.getName());
+                    + listOwner.getScreenName()
+                    + " list:" + list.getName());
         }
 
         @Override
         public void onUserListDeletion(User listOwner, UserList list) {
             System.out.println("onUserListDestroyed  listOwner:@"
-                + listOwner.getScreenName()
-                + " list:" + list.getName());
+                    + listOwner.getScreenName()
+                    + " list:" + list.getName());
         }
 
         @Override
@@ -211,37 +217,37 @@ public final class Broker {
         @Override
         public void onBlock(User source, User blockedUser) {
             System.out.println("onBlock source:@" + source.getScreenName()
-                + " target:@" + blockedUser.getScreenName());
+                    + " target:@" + blockedUser.getScreenName());
         }
 
         @Override
         public void onUnblock(User source, User unblockedUser) {
             System.out.println("onUnblock source:@" + source.getScreenName()
-                + " target:@" + unblockedUser.getScreenName());
+                    + " target:@" + unblockedUser.getScreenName());
         }
 
         @Override
         public void onRetweetedRetweet(User source, User target, Status retweetedStatus) {
             System.out.println("onRetweetedRetweet source:@" + source.getScreenName()
-                + " target:@" + target.getScreenName()
-                + retweetedStatus.getUser().getScreenName()
-                + " - " + retweetedStatus.getText());
+                    + " target:@" + target.getScreenName()
+                    + retweetedStatus.getUser().getScreenName()
+                    + " - " + retweetedStatus.getText());
         }
 
         @Override
         public void onFavoritedRetweet(User source, User target, Status favoritedRetweet) {
             System.out.println("onFavroitedRetweet source:@" + source.getScreenName()
-                + " target:@" + target.getScreenName()
-                + favoritedRetweet.getUser().getScreenName()
-                + " - " + favoritedRetweet.getText());
+                    + " target:@" + target.getScreenName()
+                    + favoritedRetweet.getUser().getScreenName()
+                    + " - " + favoritedRetweet.getText());
         }
 
         @Override
         public void onQuotedTweet(User source, User target, Status quotingTweet) {
             System.out.println("onQuotedTweet" + source.getScreenName()
-                + " target:@" + target.getScreenName()
-                + quotingTweet.getUser().getScreenName()
-                + " - " + quotingTweet.getText());
+                    + " target:@" + target.getScreenName()
+                    + quotingTweet.getUser().getScreenName()
+                    + " - " + quotingTweet.getText());
         }
 
         @Override
@@ -250,4 +256,7 @@ public final class Broker {
             System.out.println("onException:" + ex.getMessage());
         }
     };
+
+
+
 }
