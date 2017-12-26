@@ -19,7 +19,7 @@
     <target name="wsimport-client-Respuesta" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/Respuesta"/>
         <property name="wsdl-Respuesta" location="xml-resources/web-service-references/Respuesta/wsdl/localhost_50852/MessageServiceInitial/Respuesta.wsdl"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/Respuesta" destdir="${build.generated.dir}/jax-wsCache/Respuesta" wsdl="${wsdl-Respuesta}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:50852/MessageServiceInitial/Respuesta?wsdl" xnocompile="true" xendorsed="true">
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/Respuesta" destdir="${build.generated.dir}/jax-wsCache/Respuesta" wsdl="${wsdl-Respuesta}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:50852/MessageServiceInitial/Respuesta?wsdl" xnocompile="true" xendorsed="true" package="broker">
             <depends file="${wsdl-Respuesta}"/>
             <produces dir="${build.generated.dir}/jax-wsCache/Respuesta"/>
         </wsimport>
@@ -31,7 +31,7 @@
     </target>
     <target name="wsimport-client-clean-Respuesta" depends="-init-project">
         <delete dir="${build.generated.dir}/jax-wsCache/Respuesta"/>
-        <delete dir="${build.generated.sources.dir}/jax-ws/initialservice"/>
+        <delete dir="${build.generated.sources.dir}/jax-ws/broker"/>
     </target>
     <target name="wsimport-client-generate" depends="wsimport-client-Respuesta"/>
 </project>

@@ -20,7 +20,7 @@ public final class Broker {
     public static final String ACCES_TOKEN_SECRET = "3ftbEBbDdgGnI9XM4mqJ2iynxOiIhdypq8EgR7CyyCsoT";
 
     public static void main(String[] args) throws TwitterException {
-        
+
         //Configuramos las claves y tokens de nuestra aplicacion de twitter
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
@@ -31,7 +31,7 @@ public final class Broker {
 
         //Creamos una instancia para ver nuestra cuenta en streaming (tiempo real)
         TwitterStream twitterStream = new TwitterStreamFactory(cb.build())
-                .getInstance(); 
+                .getInstance();
 
         twitterStream.addListener(listener);
         // El metodo user() internamente crea threads que manipulan las llamadas a la API de twitter y hace continuamete llamadas, dependiendo de la actividad de la cuenta.
@@ -42,37 +42,35 @@ public final class Broker {
     private static final UserStreamListener listener = new UserStreamListener() {
         @Override
         public void onStatus(Status status) {
-           if (("cvcBoT17").equals(status.getInReplyToScreenName())) {
-            PostingResponse response =new PostingResponse();
-            try {
-                response.postingResponse(status.getInReplyToUserId(), status.getUser().getScreenName());
-            } catch (TwitterException ex) {
-                java.util.logging.Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-
-
-            System.out.println("onStatus @" + status.getUser().getScreenName() + " - " + status.getText());
-            
+            if (("cvcBoT17").equals(status.getInReplyToScreenName())) {
+                PostingResponse response = new PostingResponse();
+                System.out.println("onStatus @" + status.getUser().getScreenName() + " - " + status.getText());
                 try {
 
-                    if (status.getHashtagEntities()[0].getText().equals("readThis")) {
+                    if (status.getHashtagEntities()[0].getText().equals("InitialMessageService")) {
                         //Guardamos la imagen enviada a traves de twitter
                         URL url = new URL((status.getMediaEntities())[0].getMediaURL());
                         BufferedImage img = ImageIO.read(url);
                         File file = new File("C:\\Users\\mario.arias\\Desktop\\Proyectos\\TFG\\Imagenes\\" + ((status.getMediaEntities())[0].getExpandedURL()).split("/") + ".jpg");
                         ImageIO.write(img, "jpg", file);
+                        response.postingResponseOk(status.getInReplyToUserId(), status.getUser().getScreenName(), file);
                         //Si todo ha salido correctamente mostramos el tweet
                         System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
 
                     } else {
+                        response.postingResponseKo(status.getUser().getScreenName());
                         System.out.println("El hastag no se corresponde con ningun servicio");
                     }
 
                 } catch (Exception e) {
-                    //En caso de que el tweet venga vacio, mostraremos este mensaje
+                    try{
+                    response.postingResponseKo(status.getUser().getScreenName());
                     System.out.println("El tweet no contiene imagenes o viene sin hastag");
+                    }
 
+                   catch (TwitterException ex) {
+                        java.util.logging.Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
 
@@ -256,7 +254,5 @@ public final class Broker {
             System.out.println("onException:" + ex.getMessage());
         }
     };
-
-
 
 }

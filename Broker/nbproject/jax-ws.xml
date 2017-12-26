@@ -5,7 +5,7 @@
     <client name="Respuesta">
       <wsdl-url>http://localhost:50852/MessageServiceInitial/Respuesta?wsdl</wsdl-url>
       <local-wsdl-file>localhost_50852/MessageServiceInitial/Respuesta.wsdl</local-wsdl-file>
-      <package-name>initialservice</package-name>
+      <package-name forceReplace="true">broker</package-name>
       <catalog-file>catalog.xml</catalog-file>
       <wsimport-options>
         <wsimport-option>
@@ -31,6 +31,10 @@
         <wsimport-option>
           <wsimport-option-name>xendorsed</wsimport-option-name>
           <wsimport-option-value>true</wsimport-option-value>
+        </wsimport-option>
+        <wsimport-option>
+          <wsimport-option-name>package</wsimport-option-name>
+          <wsimport-option-value>broker</wsimport-option-value>
         </wsimport-option>
       </wsimport-options>
     </client>

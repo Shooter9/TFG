@@ -5,6 +5,7 @@
  */
 package InitialService;
 
+import java.awt.image.BufferedImage;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -21,8 +22,7 @@ public class Respuesta {
      * @return 
      */
     @WebMethod(operationName = "MensajeInicial")
-    public String MensajeInicial(int num) {
-        if(num==1)return "Mensaje automatico de prueba 1";
-        else return "Mensaje automatico de prueba 2";
+    public String MensajeInicial() {            
+            return ("InitialMessageService funciona correctamente"); 
     }
 }

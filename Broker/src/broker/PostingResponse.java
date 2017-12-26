@@ -5,6 +5,8 @@
  */
 package broker;
 
+import java.io.File;
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -20,48 +22,43 @@ public class PostingResponse {
     public static final String CONSUMER_SECRET = "SoQ3wtVExoYbU4oVuJvJwJjlRPmMMOhVGn0nfYxaCflVEhVfMM";
     public static final String ACCES_TOKEN = "928186006049886208-hDjjSC3Th0N6PVgNoZbtKWNTVMprtaX";
     public static final String ACCES_TOKEN_SECRET = "3K30FA9gAgmL0dxpxGnWPu0Jd5STuvfuSsVFZbxIZqx8Y";
+    public static Twitter twitter;
 
-    public static void postingResponse(Long replyID, String userName) throws TwitterException {
-      
-    ConfigurationBuilder cb = new ConfigurationBuilder();
-            cb.setDebugEnabled(true)
+    public PostingResponse() {
+        ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setDebugEnabled(true)
                 .setOAuthConsumerKey(CONSUMER_KEY)
                 .setOAuthConsumerSecret(CONSUMER_SECRET)
                 .setOAuthAccessToken(ACCES_TOKEN)
                 .setOAuthAccessTokenSecret(ACCES_TOKEN_SECRET);
-            TwitterFactory tf = new TwitterFactory(cb.build());
-            Twitter twitter = tf.getInstance();
-                    twitter.updateStatus("..."+mensajeInicial(1)+" @"+userName); //ThrowsTwitterException
+        TwitterFactory tf = new TwitterFactory(cb.build());
+        twitter = tf.getInstance();
+    }
 
-        /*String consumerKey = CONSUMER_KEY; 
-        String consumerSecret = CONSUMER_SECRET;
-        String twitterToken = ACCES_TOKEN;
-       
-        String twitterSecret = ACCES_TOKEN_SECRET;
-       
-        String replyMessage = mensajeInicial();                
-        Long inReplyToStatusId = replyID; 
-        
-            TwitterFactory factory = new TwitterFactory();
-    Twitter twitter = factory.getInstance();
-    twitter.setOAuthConsumer(consumerKey, consumerSecret);
-    AccessToken accessToken = new AccessToken(twitterToken, twitterSecret);
-    twitter.setOAuthAccessToken(accessToken);
-    StatusUpdate statusUpdate = new StatusUpdate(replyMessage);
-    statusUpdate.setInReplyToStatusId(inReplyToStatusId);
-    Status status = twitter.updateStatus(statusUpdate);
-}*/
+    public static void postingResponseOk(Long replyID, String userName, File file) throws TwitterException {
+        String message = "..." + mensajeInicial() + " @" + userName;
+        StatusUpdate status = new StatusUpdate(message);
+        status.setMedia(file); // set the image to be uploaded here.
+        twitter.updateStatus(status);
 
+    }
 
+    public static void postingResponseKo(String userName) throws TwitterException {
+        {
+            String message = "No se ha podido ofrecer el servicio solicitado @" + userName + " ";
+            StatusUpdate status = new StatusUpdate(message);
+            twitter.updateStatus(status);
 
+        }
+
+    }
+
+    private static String mensajeInicial() {
+        broker.Respuesta_Service service = new broker.Respuesta_Service();
+        broker.Respuesta port = service.getRespuestaPort();
+        return port.mensajeInicial();
+    }
     
-    }
-
-    private static String mensajeInicial(int arg0) {
-        initialservice.Respuesta_Service service = new initialservice.Respuesta_Service();
-        initialservice.Respuesta port = service.getRespuestaPort();
-        return port.mensajeInicial(arg0);
-    }
-
+    
 
 }

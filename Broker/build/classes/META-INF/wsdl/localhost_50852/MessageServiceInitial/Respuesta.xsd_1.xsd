@@ -5,9 +5,7 @@
 <xs:element name="MensajeInicialResponse" type="tns:MensajeInicialResponse"/>
 
 <xs:complexType name="MensajeInicial">
-<xs:sequence>
-<xs:element name="arg0" type="xs:int"/>
-</xs:sequence>
+<xs:sequence/>
 </xs:complexType>
 
 <xs:complexType name="MensajeInicialResponse">
