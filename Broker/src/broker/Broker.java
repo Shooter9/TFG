@@ -1,12 +1,18 @@
 package broker;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import twitter4j.*;
-import twitter4j.auth.AccessToken;
 import twitter4j.conf.ConfigurationBuilder;
 
 /**
@@ -18,8 +24,13 @@ public final class Broker {
     public static final String CONSUMER_SECRET = "tl2PJHzTPEXYFaWiqpwmlz8ermftiKeQZ7kmv9KLCmS648OHPf";
     public static final String ACCES_TOKEN = "928186006049886208-MWbI2nSWu7TlhHkciSSL87NOIAu1lZr";
     public static final String ACCES_TOKEN_SECRET = "3ftbEBbDdgGnI9XM4mqJ2iynxOiIhdypq8EgR7CyyCsoT";
+    private static DBCollection tablaServicios;
+    private static DB db;
 
-    public static void main(String[] args) throws TwitterException {
+    public static void main(String[] args) throws TwitterException, UnknownHostException {
+
+        //Conectamos el broker a la base de datos
+        conectToMongoDB();
 
         //Configuramos las claves y tokens de nuestra aplicacion de twitter
         ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -46,14 +57,16 @@ public final class Broker {
                 PostingResponse response = new PostingResponse();
                 System.out.println("onStatus @" + status.getUser().getScreenName() + " - " + status.getText());
                 try {
+                    DBObject query = new BasicDBObject("serviceName", status.getHashtagEntities()[0].getText());
+                    BasicDBObject serviceInformation = (BasicDBObject) tablaServicios.findOne(query);
 
-                    if (status.getHashtagEntities()[0].getText().equals("InitialMessageService")) {
+                    if (true) {
                         //Guardamos la imagen enviada a traves de twitter
                         URL url = new URL((status.getMediaEntities())[0].getMediaURL());
                         BufferedImage img = ImageIO.read(url);
                         File file = new File("C:\\Users\\mario.arias\\Desktop\\Proyectos\\TFG\\Imagenes\\" + ((status.getMediaEntities())[0].getExpandedURL()).split("/") + ".jpg");
                         ImageIO.write(img, "jpg", file);
-                        response.postingResponseOk(status.getInReplyToUserId(), status.getUser().getScreenName(), file);
+                        response.postingResponseOk(status.getInReplyToUserId(), status.getUser().getScreenName(), file, serviceInformation);
                         //Si todo ha salido correctamente mostramos el tweet
                         System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
 
@@ -63,12 +76,10 @@ public final class Broker {
                     }
 
                 } catch (Exception e) {
-                    try{
-                    response.postingResponseKo(status.getUser().getScreenName());
-                    System.out.println("El tweet no contiene imagenes o viene sin hastag");
-                    }
-
-                   catch (TwitterException ex) {
+                    try {
+                        response.postingResponseKo(status.getUser().getScreenName());
+                        System.out.println("El tweet no contiene imagenes o viene sin hastag");
+                    } catch (TwitterException ex) {
                         java.util.logging.Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -254,5 +265,21 @@ public final class Broker {
             System.out.println("onException:" + ex.getMessage());
         }
     };
+
+    private static void conectToMongoDB() throws UnknownHostException {
+
+        Mongo mongo = new Mongo("localhost", 27017);
+        db = mongo.getDB("webServiceInfo");
+        tablaServicios = db.getCollection("Services");
+
+    }
+
+    public static String findDocumentByServiceName(String serviceName) {
+
+        BasicDBObject query = new BasicDBObject();
+        query.put("serviceName", serviceName);
+        DBObject dbObj = tablaServicios.findOne(query);
+        return dbObj.get("serviceName").toString();
+    }
 
 }
