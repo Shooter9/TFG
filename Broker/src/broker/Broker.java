@@ -66,8 +66,9 @@ if(status.getHashtagEntities()[0]!=null){
                         ReadThis_Application ReadThis=new ReadThis_Application();
                         //Guardamos la imagen enviada a traves de twitter
                         URL url = new URL((status.getMediaEntities())[0].getMediaURL());
-                        BufferedImage img = ImageIO.read(url);
-                        File file = new File("/TFG/textRecognition/imagenAProcesar.jpg");
+                        BufferedImage img = ImageIO.read(url);                        
+                        File homedir = new File(System.getProperty("user.home"));
+                        File file = new File(homedir, "/TFG/textRecognition/imagenAProcesar.jpg");
                         ImageIO.write(img, "jpg", file);
                         ReadThis.readThisExec();
                         //response.postingResponseOk(status.getInReplyToUserId(), status.getUser().getScreenName(), file);
