@@ -1,6 +1,6 @@
 #!/bin/sh
 # This is a comment!
-sudo ./textRecognition imagenAProcesar.jpg >>results.txt      # This is a comment, too!
+./textRecognition imagenAProcesar.jpg >> resultados_Imagen.txt      # This is a comment, too!
 
 
 

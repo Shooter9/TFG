@@ -18,7 +18,7 @@ public class ReadThis_Application {
     
     
     public static void readThisExec() throws IOException{
-        ProcessBuilder pb = new ProcessBuilder(System.getProperty("user.home")+"/TFG/textRecognition/imagenAProcesar.jpg","", "");
+        ProcessBuilder pb = new ProcessBuilder(System.getProperty("user.home")+"/TFG/textRecognition/ReadThisExec.sh","", "");
         Process p = pb.start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         String line = null;
