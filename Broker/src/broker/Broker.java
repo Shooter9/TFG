@@ -57,31 +57,33 @@ public final class Broker {
                 PostingResponse response = new PostingResponse();
                 System.out.println("onStatus @" + status.getUser().getScreenName() + " - " + status.getText());
                 try {
-                    DBObject query = new BasicDBObject("serviceName", status.getHashtagEntities()[0].getText());
-                    BasicDBObject serviceInformation = (BasicDBObject) tablaServicios.findOne(query);
-
-                    if (true) {
+                    //DBObject query = new BasicDBObject("serviceName", status.getHashtagEntities()[0].getText());
+                    //BasicDBObject serviceInformation = (BasicDBObject) tablaServicios.findOne(query);
+if(status.getHashtagEntities()[0]!=null){
+                    
+                    
+                    if (status.getHashtagEntities()[0].getText().equals("readthis")) {
+                        ReadThis_Application ReadThis=new ReadThis_Application();
                         //Guardamos la imagen enviada a traves de twitter
                         URL url = new URL((status.getMediaEntities())[0].getMediaURL());
                         BufferedImage img = ImageIO.read(url);
-                        File file = new File("C:\\Users\\mario.arias\\Desktop\\Proyectos\\TFG\\Imagenes\\" + ((status.getMediaEntities())[0].getExpandedURL()).split("/") + ".jpg");
+                        File file = new File("~/TFG/textRecognition/imagenAProcesar.jpg");
                         ImageIO.write(img, "jpg", file);
-                        response.postingResponseOk(status.getInReplyToUserId(), status.getUser().getScreenName(), file, serviceInformation);
+                        ReadThis.readThisExec();
+                        //response.postingResponseOk(status.getInReplyToUserId(), status.getUser().getScreenName(), file);
                         //Si todo ha salido correctamente mostramos el tweet
                         System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
 
                     } else {
-                        response.postingResponseKo(status.getUser().getScreenName());
-                        System.out.println("El hastag no se corresponde con ningun servicio");
+                        
+
                     }
+            }
+                    
+
 
                 } catch (Exception e) {
-                    try {
-                        response.postingResponseKo(status.getUser().getScreenName());
-                        System.out.println("El tweet no contiene imagenes o viene sin hastag");
-                    } catch (TwitterException ex) {
-                        java.util.logging.Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                       System.out.println("El tweet viene sin hastag");
                 }
             }
 
