@@ -21,7 +21,7 @@ public class ReadThis_Application {
         
           
               
- String path = System.getProperty("user.home")+"/TFG/textRecognition/ReadThisExec.sh/";
+ String path = System.getProperty("user.home")+"/TFG/textRecognition/ReadThisExec.sh";
         try {
             Process proc = Runtime.getRuntime().exec(path); 
             BufferedReader read = new BufferedReader(new InputStreamReader(
