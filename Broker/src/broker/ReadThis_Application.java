@@ -17,25 +17,35 @@ public class ReadThis_Application {
     
     
     
-    public static void readThisExec() throws IOException {
-        
+    public static void readThisExec() {       
           
               
- String path = System.getProperty("user.home")+"/TFG/textRecognition/ReadThisExec.sh";
-        try {
-            Process proc = Runtime.getRuntime().exec(path); 
-            BufferedReader read = new BufferedReader(new InputStreamReader(
-                    proc.getInputStream()));
-            try {
-                proc.waitFor();
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
-            while (read.ready()) {
-                System.out.println(read.readLine());
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-}
+ String cmd = System.getProperty("user.home")+"/TFG/textRecognition/ReadThisExec.sh";  
+//String cmd = "D://script.bat" //for windows
+ ProcessBuilder pb = new ProcessBuilder(cmd); 
+ try
+ {
+ Process process = pb.start();
+ BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+ StringBuilder builder = new StringBuilder();
+ String line = null;
+ while ( (line = reader.readLine()) != null) {
+ builder.append(line);
+ }
+ String result = builder.toString();
+ System.out.print(result);
+ System.out.println("end of script execution");
+ }
+ catch (IOException e)
+ { System.out.print("error");
+ e.printStackTrace();
+ }
+    }
+
+    
+    
+    
+    
+    
+    
 }
