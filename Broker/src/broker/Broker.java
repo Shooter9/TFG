@@ -75,14 +75,19 @@ public final class Broker {
 
                     } else {
                         
-
+PostingResponse.postingResponseKo(status.getUser().getScreenName());
                     }
             
                     
 
 
                 } catch (Exception e) {
-                       System.out.println("El tweet viene sin hastag");
+                    try {
+                        PostingResponse.postingResponseKo(status.getUser().getScreenName());
+                    } catch (TwitterException ex) {
+                        java.util.logging.Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                       
                 }
             }
 

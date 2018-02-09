@@ -21,16 +21,21 @@ public class ReadThis_Application {
         
           
               
- String path = System.getProperty("user.home")+"/TFG/textRecognition/ReadThisExec.sh";
-        System.out.println("Ruta: "+path);
-    Runtime.getRuntime().exec("/bin/sh " + path + "/.homer.sh"); 
-
-
-    
-    
-    
-    
-    
-    
+ String path = System.getProperty("user.home")+"/TFG/textRecognition/ReadThisExec.sh/";
+        try {
+            Process proc = Runtime.getRuntime().exec(path); 
+            BufferedReader read = new BufferedReader(new InputStreamReader(
+                    proc.getInputStream()));
+            try {
+                proc.waitFor();
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+            while (read.ready()) {
+                System.out.println(read.readLine());
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
 }
 }
