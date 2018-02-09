@@ -17,30 +17,14 @@ public class ReadThis_Application {
     
     
     
-    public static void readThisExec() {
+    public static void readThisExec() throws IOException {
         
           
               
- String cmd = System.getProperty("user.home")+"/TFG/textRecognition/ReadThisExec.sh";  
-//String cmd = "D://script.bat" //for windows
- ProcessBuilder pb = new ProcessBuilder(cmd); 
- try
- {
- Process process = pb.start();
- BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
- StringBuilder builder = new StringBuilder();
- String line = null;
- while ( (line = reader.readLine()) != null) {
- builder.append(line);
- }
- String result = builder.toString();
- System.out.print(result);
- System.out.println("end of script execution");
- }
- catch (IOException e)
- { System.out.print("error");
- e.printStackTrace();
- }
+ String path = System.getProperty("user.home")+"/TFG/textRecognition/ReadThisExec.sh";
+        System.out.println("Ruta: "+path);
+    Runtime.getRuntime().exec("/bin/sh " + path + "/.homer.sh"); 
+
 
     
     
