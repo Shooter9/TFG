@@ -20,6 +20,7 @@ public class ReadThis_Application {
     public static void readThisExec() {
         
           try {
+              System.out.println(System.getProperty("user.home")+"/TFG/textRecognition/ReadThisExec.sh");
     ProcessBuilder pb = new ProcessBuilder(
       System.getProperty("user.home")+"/TFG/textRecognition/ReadThisExec.sh");
     Process p = pb.start();     // Start the process.
