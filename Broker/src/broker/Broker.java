@@ -59,7 +59,7 @@ public final class Broker {
                 try {
                     //DBObject query = new BasicDBObject("serviceName", status.getHashtagEntities()[0].getText());
                     //BasicDBObject serviceInformation = (BasicDBObject) tablaServicios.findOne(query);
-if(status.getHashtagEntities()[0]!=null){
+                    if(status.getHashtagEntities()[0]!=null){
                     
                     
                     if (status.getHashtagEntities()[0].getText().equals("readthis")) {

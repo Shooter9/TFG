@@ -17,15 +17,18 @@ public class ReadThis_Application {
     
     
     
-    public static void readThisExec() throws IOException{
-        ProcessBuilder pb = new ProcessBuilder(System.getProperty("user.home")+"/TFG/textRecognition/ReadThisExec.sh","", "");
-        Process p = pb.start();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        String line = null;
-        while ((line = reader.readLine()) != null)
-        {
-           System.out.println(line);
-        }
+    public static void readThisExec() {
+        
+          try {
+    ProcessBuilder pb = new ProcessBuilder(
+      System.getProperty("user.home")+"/TFG/textRecognition/ReadThisExec.sh");
+    Process p = pb.start();     // Start the process.
+    p.waitFor();                // Wait for the process to finish.
+    System.out.println("Script executed successfully");
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
+
     }
     
     
