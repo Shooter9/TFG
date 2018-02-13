@@ -55,23 +55,24 @@ public final class Broker {
         public void onStatus(Status status) {
             if (("cvcBoT17").equals(status.getInReplyToScreenName())) {
                 PostingResponse response = new PostingResponse();
-                System.out.println("onStatus @" + status.getUser().getScreenName() + " - " + status.getText());
+                System.out.println("Petición entrante: @" + status.getUser().getScreenName() + " - " + status.getText());
                 try {
                     //DBObject query = new BasicDBObject("serviceName", status.getHashtagEntities()[0].getText());
                     //BasicDBObject serviceInformation = (BasicDBObject) tablaServicios.findOne(query);                    
                     
                     
-                    if (status.getHashtagEntities()[0].getText().equals("readthis")) {
+                    if (status.getHashtagEntities()[0].getText().equals("readthis") || status.getHashtagEntities()[0].getText().equals("ReadThis")) {
                        
                         //Guardamos la imagen enviada a traves de twitter
                         URL url = new URL((status.getMediaEntities())[0].getMediaURL());
                         BufferedImage img = ImageIO.read(url);          
                         File file = new File(System.getProperty("user.home")+"/TFG/textRecognition/imagenAProcesar.jpg");
                         ImageIO.write(img, "jpg", file);
+                        System.out.println("Imagen guardada correctamente");
                         ReadThis_Application.readThisExec();
                         //response.postingResponseOk(status.getInReplyToUserId(), status.getUser().getScreenName(), file);
                         //Si todo ha salido correctamente mostramos el tweet
-                        System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
+                        //System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
 
                     } else {
                         
